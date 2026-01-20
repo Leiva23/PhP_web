@@ -25,7 +25,12 @@ if ($user != $_POST["login_user"]) {
 }
 
 if (strlen($user) < 2) {
-	die("Error 5: User demasiado corto")
+	die("Error 5: User demasiado corto");
+}
+
+$user = filter_var($user, FILTER_SANITIZE_SPECIAL_CHARS);
+if ($user != $_POST["login_user"]) {
+	die("Error 6: User mal formado");
 }
 
 ?>
