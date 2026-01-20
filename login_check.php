@@ -33,4 +33,23 @@ if ($user != $_POST["login_user"]) {
 	die("Error 6: User mal formado");
 }
 
+$password = addslashes($_POST["login_password"]);
+
+if ($password != $_POST["login_password"]);
+	die("Error 7: ");
+
+
+
+$password = md5($password);
+
+$query = <<<EOD
+SELECT
+	id_user
+FROM
+	users
+WHERE
+	name='($user)'
+	AND password='{$password}';
+EOD;
+
 ?>
