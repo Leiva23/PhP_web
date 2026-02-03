@@ -1,27 +1,22 @@
 <?php
-
-if	(!isset($_POST["login_user"])
+if (!isset($_POST["login_user"])
 	|| !isset($_POST["login_password"])){
 
 	die("Error 1: Formulario no enviado");
-	exit();
 }
 
 if (empty($_POST["login_user"])){
 	die("Error 2: Campo de login no enviado");
-	exit();
 }
 
-if	(empty($_POST["login_password"])){
+if (empty($_POST["login_password"])){
 	die("Error 3: Campo de password no enviado");
-	exit();
 }
 
 $user = addslashes($_POST["login_user"]);
 
 if ($user != $_POST["login_user"]) {
 	die("Error 4: User mal formado");
-	exit();
 }
 
 if (strlen($user) < 2) {
@@ -35,15 +30,18 @@ if ($user != $_POST["login_user"]) {
 
 $password = addslashes($_POST["login_password"]);
 
-if ($password != $_POST["login_password"]){
-	die("Error 7: Password mal formulado ");
+if ($password != $_POST["login_password"]) {
+	die("Error 7: Password mal formado");
 }
 
-if (strlen($password) < 4){
+if (strlen($password) < 4) {
 	die("Error 8: Password demasiado corto");
 }
 
+
 $password = md5($password);
+
+// HACER MÁS TESTS al password
 
 $conn = mysqli_connect('localhost', 'admin_db', 'enti', 'pizzeria_musso');
 if (!$conn){
@@ -56,21 +54,29 @@ SELECT
 FROM
 	users
 WHERE
-	username='($user)'
+	username='{$user}'
 	AND password='{$password}';
 EOD;
 
-echo $query;
+//echo $query;
 
 $result = mysqli_query($conn, $query);
 if (!$result){
-	die("Error 10: Petición incorrecta");
+	die('Error 10: Petición incorrecta');
 }
 
 if (mysqli_num_rows($result) != 1){
-	die ("Error 11: Nombre de usuario o password incorrecto");
+	die('Error 11: Nombre de usuario o password incorrectos'); 
 }
 
-echo "logueado";
+session_start();
+
+$data = $result->fetch_assoc();
+
+$_SESSION["id_user"] = $data("id_user");
+
+header("Location: index.php");
+
+exit();
 
 ?>
