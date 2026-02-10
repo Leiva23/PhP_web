@@ -2,44 +2,50 @@
 
 session_start();
 
+require_once("func.session_check.php");
 require_once("template.php");
+require_once("conf.database.php");
 
 writeHTML();
 
 openBody();
 
-$conn = mysqli_connect('localhost', 'admin_db', 'enti', 'pizzeria_musso');
-if (!$conn){
-	die("Error 1: No se pudo conectar con la base de datos");
+$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_db);
+if (!$conn) {
+        die("Error 1: No se pudo conectar con la base de datos");
 }
 
+$id_user = session_check($conn);
 
-$query= <<<EOD
+if ($id_user) {
+	$query = <<<EOD
 SELECT
-	clients.name
+        clients.name
 FROM
-	users
+        users
 LEFT JOIN clients
-	ON users.id_client=clients.id_client
+        ON users.id_client = clients.id_client
 WHERE
-	users.id_user={$_SESSION["id_user"]};
+        users.id_user ={$id_user};
 EOD;
 
-$result = mysqli_connect($conn, $query);
-if (!$result){
-	die('Error 2: Peticion incorrecta');
+	$result = mysqli_query($conn, $query);
+	if (!$result){
+        	die("Error 2: Petición incorrecta");
+	}	
+
+	$num_rows = mysqli_num_rows($result);
+	if ($num_rows > 1){
+		die('Eror 3: No hombre no');
+		return false;
+	}
+
+	if ($num_rows == 1){
+		$data = $result->fetch_assoc();
+	
+		echo "<p><marquee>Hola ".$data["name"]."</marquee></p>";
+	}
 }
-
-if (mysqli_num_rows($result) > 1){
-	die('Error 3: Nombre de usuario o password incorrectos');
-}
-
-$data = $result->fetch_assoc();
-
-echo "<p><maqrquee>Hola ".$data["name"]."</marquee></p>";
-
-echo $query;
-
 closeBody();
 
 ?>
