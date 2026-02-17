@@ -50,9 +50,36 @@ writeHTML();
 
 openBody();
 
-openDashboard("Dashboard");
+openDashboard("Pizzas");
 
-closeDashborad();
+$query = <<< EOD
+SELECT * 
+FROM pizzas
+ORDER BY price ASC;
+EOD;
+
+$result = mysqli_query($conn, $query);
+
+if (!$result){
+	die("Error: No se ha podido obtener el listado de pizzas");
+}
+
+
+echo <<<EOD
+<section id="pizza_list">
+<h2>Listado de pizzas</h2>
+EOD;
+
+while ($pizza = $result->fetch_assoc()){
+echo <<<EOD
+	<article>
+		<h3>{$pizza["pizza"]}</h3>
+		<th>{$pizza["price"]}</th>
+		<th>{$pizza["description"]}</th>
+	</article>
+EOD;
+}
+echo "</section>";
 
 closeBody();
 

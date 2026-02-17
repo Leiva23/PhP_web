@@ -46,56 +46,11 @@ EOD;
 require_once("template.php");
 require_once("template_dashboard.php");
 
-writeHTML(Dashboard: Usuarios);
+writeHTML();
 
 openBody();
 
-openDashboard("Usuarios");
-
-$query = <<< EOD
-SELECT users.id_user,user.username, clients.name,clients.email
-FROM clients
-LEFT JOIN users ON clients.id_client=users.id_client
-EOD;
-
-$users = "";
-$result = mysqli_query($conn, $query);
-if ($result){
-	if(mysqli_num_rows($result) > 0){
-		while ($user = $result->fetch_assoc()){
-$users .= <<< EOD
-	<tr>
-		<th>{$user["id_user"]}</th>
-		<th>{$user["user"]}</th>
-		<th>{$user["name"]}</th>
-		<th>{$user["email"]}</th>
-		<th><a href="dashboard_user_edit.php?id_user={$user["id_user"]}">edit</a></th>
-	</tr>
-
-		}	
-	}
-}
-echo <<< EOD
-<table>
-	<tr>
-		<th>id</th>
-		<th>user</th>
-		<th>name</th>
-		<th>email</th>
-		<th></th>
-	</tr>
-
-	<tr>
-		<td>1</td>
-		<td>root</td>
-		<td>Administratore</td>
-		<td>root@pizza.org</td>
-		<td>edit</td>
-	</tr>
-($users)
-</table>
-EOD;
-
+openDashboard("Dashboard");
 
 closeDashborad();
 

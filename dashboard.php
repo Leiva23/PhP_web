@@ -51,7 +51,6 @@ writeHTML(Dashboard: Usuarios);
 openBody();
 
 openDashboard("Usuarios");
-$users = "";
 
 $query = <<< EOD
 SELECT users.id_user,user.username, clients.name,clients.email
@@ -59,6 +58,7 @@ FROM clients
 LEFT JOIN users ON clients.id_client=users.id_client
 EOD;
 
+$users = "";
 $result = mysqli_query($conn, $query);
 if ($result){
 	if(mysqli_num_rows($result) > 0){
