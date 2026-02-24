@@ -11,41 +11,40 @@ writeHTML();
 openBody();
 
 $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_db);
-if (!$conn) {
-        die("Error 1: No se pudo conectar con la base de datos");
+if (!$conn){
+	die("Error 1: No se pudo conectar con la base de datos");
 }
 
-$id_user = session_check($conn);
 
+$id_user = session_check($conn);
 if ($id_user) {
 	$query = <<<EOD
 SELECT
-        clients.name
+	clients.name
 FROM
-        users
+	users
 LEFT JOIN clients
-        ON users.id_client = clients.id_client
+	ON users.id_client=clients.id_client
 WHERE
-        users.id_user ={$id_user};
+	users.id_user={$id_user};
 EOD;
 
 	$result = mysqli_query($conn, $query);
 	if (!$result){
-        	die("Error 2: Petición incorrecta");
-	}	
+		die('Error 2: Petición incorrecta');
+	}
 
 	$num_rows = mysqli_num_rows($result);
 	if ($num_rows > 1){
-		die('Eror 3: No hombre no');
-		return false;
+		die('Error 3: No hombre no'); 
 	}
-
 	if ($num_rows == 1){
 		$data = $result->fetch_assoc();
-	
+
 		echo "<p><marquee>Hola ".$data["name"]."</marquee></p>";
 	}
 }
+
 closeBody();
 
 ?>

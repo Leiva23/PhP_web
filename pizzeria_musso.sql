@@ -4,7 +4,7 @@ CREATE DATABASE pizzeria_musso;
 
 USE pizzeria_musso;
 
-CREATE TABLE clients (
+CREATE TABLE clients(
 	id_client INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(24) NOT NULL,
 	address VARCHAR(64) NOT NULL,
@@ -17,19 +17,17 @@ CREATE TABLE users (
 	id_user INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(16) NOT NULL,
 	password CHAR(32) NOT NULL,
+	role INT UNSIGNED NOT NULL DEFAULT 2,
+	status ENUM('active', 'inactive', 'suspended') NOT NULL DEFAULT 'active',
 	id_client INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_client) REFERENCES clients(id_client)
 );
 
-
 INSERT INTO clients (name, address, phone, email, birthdate)
-VALUES ('administratore', 'Calle Falsa, 123', '666 666 666', 'admin@pizzeriamusso.it', '1883-07-29');
+VALUES ('Administratore', 'Calle Falsa, 123', '666 666 666', 'admin@pizzeriamusso.it', '1883-07-29');
 
-INSERT INTO users (username, password, id_client)
-VALUES ('root', MD5('enti'), 1);
-
-
-
+INSERT INTO users (username, password, role, status, id_client)
+VALUES ('root', MD5('enti'), 1, 'active', 1);
 
 DROP USER IF EXISTS 'admin_db'@'localhost';
 
