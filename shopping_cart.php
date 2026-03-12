@@ -5,7 +5,8 @@ session_start();
 require_once("func.session_check.php");
 require_once("template.php");
 require_once("conf.database.php");
-writeHTML();
+
+writeHTML("Shopping Cart - Pizzeria Musso", ["shopping_cart.js"]);
 
 openBody();
 
@@ -16,10 +17,11 @@ if (!$conn){
 
 $id_user = session_check($conn);
 
-if (!isset($_SESSION["carrito"]) || count($_SESSION["carrito"] == 0)){
+if (!isset($_SESSION["carrito"]) || count($_SESSION["carrito"]) == 0){
 
 	echo "<p class=\"shopping-cart-nopizza\">No has seleccionado ninguna pizza</p>";
-closeBody();
+	closeBody();
+	exit();
 }
 
 $pizza_list = array_unique($_SESSION["carrito"]);
@@ -46,18 +48,26 @@ echo <<<EOD
 <h2>Listado de Pizzas</h2>
 EOD;
 
+$quantities = array_count_values($_SESSION["carrito"]);
+
 while ($pizza = $result->fetch_assoc()){
      
-     
+	$quantity = $quantities[$pizza["id_pizza"]];
+
      echo <<<EOD
 <article>
      <h3>{$pizza["pizza"]}</h3>
      <p><img src="imgs/pizza_{$pizza["id_pizza"]}.jpg" style="height:300px" /></p>
      <p>{$pizza["description"]}</p>
      <p>{$pizza["price"]} €</p>
-     <form action="pizzas_check.php" method="POST">
+     <form action="shopping_cart_add.php" method="POST">
         <input type="hidden" name="id_pizza" value="{$pizza["id_pizza"]}" />
-        <button type="submit">🍕 Comprar</button>
+        <button type="submit">🍕 Añadir</button>
+     </form>
+	 <p class="shopping-cart-quantity" id="quantity_{$pizza["id_pizza"]}">{$quantity}</p>
+     <form action="shopping_cart_remove.php" method="POST">
+        <input type="hidden" name="id_pizza" value="{$pizza["id_pizza"]}" />
+        <button type="submit">🍕 Borrar</button>
      </form>
 </article>
 

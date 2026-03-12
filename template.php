@@ -1,13 +1,19 @@
 <?php
 
-function writeHTML ($title="Pizzería Musso")
+function writeHTML ($title="Pizzería Musso", $js=[])
 {
-     echo <<<EOD
+	$scripts = "";
+	for ($i = 0; $i < count($js); $i++){
+		$scripts = <<<EOD
+<script src="{$js[$i]
+}
+
+echo <<<EOD
 <!doctype html>
 <html>
 <head>
      <title>{$title}</title>
-</head>
+/head>
 EOD;
 }
 
